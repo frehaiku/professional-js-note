@@ -15,4 +15,5 @@
 ##目录
 
 - [第1章 Javascript简介](docs/chapter-01.md)
+- [第2章 在HTML中使用Javascript](docs/chapter-02.md)
 
