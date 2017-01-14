@@ -252,3 +252,41 @@ console.log( parseFloat("484.44.484") ); // 484.44
 \\          | 斜杠
 
 这些字符字面量可以出现在字符串中，而且也被当做一个字符来解析。
+
+#### 字符串的特点
+
+ECMAScript中的字符串是不可变的，字符串一旦创建，它们的值就不能改变。要改变某个变量保存字符串，首先要销毁原来的字符串，然后再用另外一个包含新值的字符串填充该变量，例如：
+
+```javascript
+var lang = 'Java';
+lang = lang  + 'Script';
+```
+
+实现这个操作的过程如下：首先创建一个能容纳10个字符的新字符串，然后在这个字符串中填充 `Java` 和 `Script` ，最后一步是销毁原来的字符串 `Java` 和 字符串 `Script` ，因为这两个字符串已经没用了。这个过程是在后台发生的，而这也是在某些旧版本的浏览器中拼接字符串时速度很慢的原因。但这些浏览器后来的版本已经解决了这个低效率的问题。
+
+#### 转换为字符串
+
+- `toString()` 方法，数值、布尔值、对象和字符串值都有这方法，但null和undefined值没有这个方法。在数值调用 `toString` 方法时可以传递一个参数：输出数值的基数。默认情况下， `toString()` 方法以十进制格式返回数值的字符串表示。而通过传递参数， `toString()` 可以输出以二进制、八进制、十六进制，乃至任何有效进制格式表示的字符串值。如下面的例子：
+
+```javascript
+var arr = [1, 2, 3];
+arr.toString(); // "1,2,3"
+
+var obj = {a: 1,b: 2};
+obj.toString(); // [object Object]
+
+var nullVal = null;
+nullVal.toString(); // Uncaught TypeError: Cannot read property 'toString' of null
+
+var num = 10;
+alert(num.toString());  // "10"
+alert(num.toString(2)); // "1010"
+alert(num.toString(8)); // "12"
+alert(num.toString(10));    // "10"
+alert(num.toString(16));    // "a"
+```
+
+- 'String()' 方法，在不知道转换值是不是null和undefined的情况下，还可以使用转型函数 `String()` ,这个函数能够将任何类型的值转换为字符串。 `String()` 函数遵循下列转换规则：
+    - 如果值有 `toString()` 方法，则调用该方法(没有参数)并返回结果
+    - 如果值是 `null` ，则返回 `null`
+    - 如果值是 `undefined` ，则返回 `undefined`
