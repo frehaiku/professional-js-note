@@ -286,7 +286,32 @@ alert(num.toString(10));    // "10"
 alert(num.toString(16));    // "a"
 ```
 
-- 'String()' 方法，在不知道转换值是不是null和undefined的情况下，还可以使用转型函数 `String()` ,这个函数能够将任何类型的值转换为字符串。 `String()` 函数遵循下列转换规则：
+- `String()` 方法，在不知道转换值是不是null和undefined的情况下，还可以使用转型函数 `String()` ,这个函数能够将任何类型的值转换为字符串。 `String()` 函数遵循下列转换规则：
     - 如果值有 `toString()` 方法，则调用该方法(没有参数)并返回结果
     - 如果值是 `null` ，则返回 `null`
     - 如果值是 `undefined` ，则返回 `undefined`
+    
+### Object类型
+
+一组数据和功能的集合，对象可以通过执行 `new` 操作符后跟要创建的对象类型的名称来创建。而创建 `Object` 类型的实例并为其添加属性和方法，就可以创建自定义对象。在JS中如果不给构造函数传递参数，则可以省略后面的那一对圆括号（但是这是不推荐的写法）。
+
+Object类型是所有实例的基础，换句话说，object类型所具有的任何属性和方法也同样存在于更具体的对象中。Object的每个实例都具有下列属性和方法。
+
+- `constructor` ：保存着用于创建当前对象的函数，Object的构造函数就是Object()。
+- `hasOwnProperty(propertyName)` ：用于检查给定的属性在当前的对象实例中（而不是在实例的原型链中）是否存在。
+- `isPrototypeOf(object)` ：用于检查传入的对象是否是传入对象的原型，看下面的例子：
+```javascript
+var Person = function() {
+  
+};
+
+Person.prototype.name = 'haiku';
+
+var person1 = new Person();
+
+Person.prototype.isPrototypeOf(person1);    // true
+```
+- `propertyIsEnumerable(propertyName)`：用于检查给定的属性是否能够用 `for-in` 语句来枚举。
+- `toLocaleString()` ：返回对象的字符串表示，该字符串与执行环境的地区对应
+- `toString()` ：返回对象的字符串表示
+- `valueOf()` ：返回对象的字符串、数值或布尔值表示。通常与 `toString()` 方法的返回值相同。
