@@ -483,7 +483,7 @@ var newValue = oldValue << 5;   // 等于二进制的1000000，十进制的64
 
 #### 6.有符号的右移
 
-右移操作符由两个大于号（>>）表示，这个操作符会将数值向右移动，但保留符号位（即正负号标记）。在这过程中遇到空位时，ECMAScript会用**符号位**的值来填充所有空位，有符号的右移操作与左移操作恰好相反，即如果将64向右移动5位，结果将变回2。
+右移操作符由两个大于号（>>）表示，这个操作符会将数值向右移动，但**保留符号位**（即正负号标记）。在这过程中遇到空位时，ECMAScript会用**符号位**的值来填充所有空位，有符号的右移操作与左移操作恰好相反，即如果将64向右移动5位，结果将变回2。
 
 #### 7.无符号右移
 
@@ -535,7 +535,7 @@ alert( !!"" );          // false
 - 如果第一个操作数是**对象**，则返回**第二个操作数**
 - 如果第二个操作数是**对象**，则只有在**第一个操作数的求值结果为 `true` 的情况下**才会返回该对象
 - 如果两个操作数**都是对象**，则返回**第二个操作数**
-- 如果有一个操作数是 `null` ，则返回null
+- 如果有一个操作数是 `null` ，则返回 `null`
 - 如果有一个操作数是 `NaN` ，则返回 `NaN`
 - 如果有一个操作数是 `undefined` ，则返回 `undefined`
 
@@ -559,6 +559,71 @@ alert( null && 1);          // null
 
 逻辑或操作符由两个竖线符号（||）表示，有两个操作数。与逻辑与操作类似，如果有一个操作数不是布尔值，逻辑或不一定返回布尔值，它遵循下列规则：
 
+- 如果第一个操作数是对象，则返回第一个操作数
+- 如果第一个操作数的求值结果为 `false` ，则返回第二个操作数
+- 如果两个操作数都是对象，则返回第一个操作数
+- 如果两个操作数都是 `null` ，则返回 `null`
+- 如果两个操作数都是 `NaN` ，则返回 `NaN`
+- 如果两个操作数都是 `undefined` ，则返回 `undefined` 。
 
+与逻辑与操作符相似，逻辑或操作符也是短路操作符。也就是说，如果第一个操作数的求值结果为 `true` ，就不会对第二个操作数求值了。
+我们可以利用逻辑或的这一行为来避免为变量赋 `null` 或 `undefined` 值。
 
+```javascript
+// get window obj
+var parent = document.defaultView || document.parentWindow;
+var txt = document.querySelectorAll('p');
+var textColor = (parent.getComputedStyle(txt, null) 
+                 || txt.currentStyle).getPropertyValue('color');
+```
 
+### 乘性操作符
+
+ECMAScript会定义3个乘性操作符：乘法、除法和求模，这些操作数在非数值的情况下会执行自动的类型转换。
+如果参与乘性计算的某个操作数不是数值，后台会使用[ `Number()` 转型函数](chapter-03.md#4数值转换)将其转换为数值。
+也就是说，空字符串将被当做0，布尔 `true` 将被当作1。
+
+#### 1.乘法
+
+乘法操作符用一个星号（*）表示，用于计算两个数值的乘积。在处理特殊值的情况下，其遵循下列特殊规则：
+
+- 如果操作数是数值，执行常规的乘法计算，如果乘积超过了ECMAScript的数值的表示范围，则返回 `Infinity` 或 `-Infinity` ;
+- 如果有一个操作数是 `NaN` ，则结果是 `NaN`
+- 如果是 `Infinity` 与 0 相乘，则结果是 `NaN`
+- 如果是 `Infinity` 与 非0数值相乘，则结果是 `Infinity` 或 `-Infinity` ，取决于有符号操作数的符号
+- 如果是 `Infinity` 与 `Infinitiy` 相乘，则结果是 `Infinity`
+- 如果有一个操作数不是数值，则在后台调用 `Number()` 将其转换成数值，然后再应用上面的规则。
+
+```javascript
+var infinityNum = Number.MAX_VALUE + Number.MAX_VALUE;
+var str;
+
+alert(infinityNum * 333); // Infinity
+alert(infinityNum * 0);     // NaN
+alert("str" * 0);   // NaN
+alert(str * 111);   // NaN
+```
+
+#### 2.除法
+
+执行第二个操作数除第一个操作数的计算。
+与乘法操作符类似，除法操作符对特殊的值也有特殊的处理规则。这些规则如下：
+
+- 如果操作数是数值，执行常规的除法计算，如果**商**超过了ECMAScript的数值的表示范围，则返回 `Infinity` 或 `-Infinity` ;
+- 如果有一个操作数是 `NaN` ，则结果是 `NaN`
+- 如果是 `Infinity` 被 `Infinity` 除，则结果是 `NaN`
+- 如果0被0除，则结果是 `NaN`
+- 如果是非0的有限数被0除，则结果是 `Infinity` 或 `-Infinity` ，取决于有符号操作符的符号
+- 如果是 `Infinity` 被任何非零数值除，则结果是 `Infinity` 或 `-Infinity` ，取决于有符号操作数的符号
+- 如果有一个操作数不是数值，则在后台调用 `Number()` 将其转换为数值，然后再应用上面的规则
+
+```javascript
+var infinityNum = Number.MAX_VALUE + Number.MAX_VALUE;
+
+alert(1 / infinityNum);                 // 0
+alert(NaN / 333);                       // NaN
+alert(infinityNum / infinityNum);       // NaN
+alert(0 / 0);                           // NaN
+alert(111 / 0);                         // Infinity
+alert("111" / 11);                      // 10.090909090909092
+```
